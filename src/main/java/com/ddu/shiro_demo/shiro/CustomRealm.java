@@ -14,30 +14,44 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class CustomRealm extends AuthorizingRealm{
+public class CustomRealm extends AuthorizingRealm {
 
     @Autowired
     private LoginService loginService;
 
+    /**
+     * 提供用户信息返回权限信息
+     *
+     * @param principalCollection
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        //获取登录用户名
-        String name = (String) principalCollection.getPrimaryPrincipal();
-        //根据用户名去数据库查询用户信息
-        User user = loginService.getUserByName(name);
-        //添加角色和权限
-        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        for (Role role : user.getRoles()) {
-            //添加角色
-            simpleAuthorizationInfo.addRole(role.getName());
-            //添加权限
-            for (Permission permission : role.getPermissions()) {
-                simpleAuthorizationInfo.addStringPermission(permission.getName());
-            }
-        }
-        return simpleAuthorizationInfo;
+//        //获取登录用户名
+//        String name = (String) principalCollection.getPrimaryPrincipal();
+//        //根据用户名去数据库查询用户信息
+//        User user = loginService.getUserByName(name);
+//        //添加角色和权限
+//        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+//        for (Role role : user.getRoles()) {
+//            //添加角色
+//            simpleAuthorizationInfo.addRole(role.getName());
+//            //添加权限
+//            for (Permission permission : role.getPermissions()) {
+//                simpleAuthorizationInfo.addStringPermission(permission.getName());
+//            }
+//        }
+//        return simpleAuthorizationInfo;
+        return null;
     }
 
+    /**
+     * 提供账户信息返回认证信息
+     *
+     * @param authenticationToken
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         //加这一步的目的是在Post请求的时候会先进认证，然后在到请求

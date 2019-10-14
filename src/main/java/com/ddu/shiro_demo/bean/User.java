@@ -1,6 +1,5 @@
 package com.ddu.shiro_demo.bean;
 
-import java.util.Set;
 
 /**
  * 用户
@@ -18,10 +17,12 @@ public class User {
      * 密码
      */
     private String password;
-    /**
-     * 用户对应的角色集合
-     */
-    private Set<Role> roles;
+
+    public User(String id, String name, String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+    }
 
     public String getId() {
         return id;
@@ -47,18 +48,12 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public User(String id, String name, String password, Set<Role> roles) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.roles = roles;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
