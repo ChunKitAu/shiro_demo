@@ -1,5 +1,6 @@
 package com.ddu.shiro_demo.controller;
 
+import com.ddu.shiro_demo.utils.CommonResult;
 import com.ddu.shiro_demo.bean.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @RequestMapping("/login")
-    public String login(User user) {
+    public CommonResult login(User user) {
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
@@ -29,12 +30,12 @@ public class LoginController {
             subject.checkPermissions("query", "add");
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return "账号或密码错误！";
+            return CommonResult.failure("账号或密码错误");
         } catch (AuthorizationException e) {
             e.printStackTrace();
-            return "没有权限";
+            return CommonResult.failure("没有权限");
         }
-        return "login success";
+        return CommonResult.success();
     }
 
     //注解验角色和权限

@@ -3,16 +3,16 @@ package com.ddu.shiro_demo.dao;
 import com.ddu.shiro_demo.bean.RPermission;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Component
 public class RPermissionDao {
 
-    static List<RPermission> db;
+    static Set<RPermission> db;
 
     static {
-        db = new ArrayList<>();
+        db = new HashSet<>();
         /**
          * admin 拥有 add delete update select权限
          */
@@ -33,7 +33,7 @@ public class RPermissionDao {
      *
      * @return
      */
-    public List<RPermission> getRPs() {
+    public Set<RPermission> getRPs() {
         return db;
     }
 

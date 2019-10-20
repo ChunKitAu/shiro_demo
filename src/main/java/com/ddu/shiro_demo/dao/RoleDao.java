@@ -3,16 +3,16 @@ package com.ddu.shiro_demo.dao;
 import com.ddu.shiro_demo.bean.Role;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class RoleDao {
 
-    static List<Role> db;
+    static Set<Role> db;
 
     static {
-        db = new ArrayList<>();
+        db = new HashSet<>();
         db.add(new Role("r001","admin"));
         db.add(new Role("r002","guest"));
     }
@@ -22,7 +22,7 @@ public class RoleDao {
      *
      * @return
      */
-    public List<Role> getRoles(){
+    public Set<Role> getRoles(){
         return db;
     }
 

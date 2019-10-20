@@ -4,16 +4,16 @@ package com.ddu.shiro_demo.dao;
 import com.ddu.shiro_demo.bean.User;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Component
 public class UserDao {
 
-    static List<User> db;
+    static Set<User> db;
 
     static {
-        db = new ArrayList<>();
+        db = new HashSet<>();
         db.add(new User("u001", "user01", "123456"));
         db.add(new User("u002", "user02", "123456"));
         db.add(new User("u003", "user03", "123456"));
@@ -24,7 +24,7 @@ public class UserDao {
      *
      * @return
      */
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return db;
     }
 

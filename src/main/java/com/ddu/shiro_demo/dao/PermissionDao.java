@@ -3,16 +3,16 @@ package com.ddu.shiro_demo.dao;
 import com.ddu.shiro_demo.bean.Permission;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class PermissionDao {
 
-    static List<Permission> db;
+    static Set<Permission> db;
 
     static {
-        db = new ArrayList<>();
+        db = new HashSet<>();
         db.add(new Permission("p001","add"));
         db.add(new Permission("p002","delete"));
         db.add(new Permission("p003","update"));
@@ -24,7 +24,7 @@ public class PermissionDao {
      *
      * @return
      */
-    public List<Permission> getPermissions(){
+    public Set<Permission> getPermissions(){
         return db;
     }
 

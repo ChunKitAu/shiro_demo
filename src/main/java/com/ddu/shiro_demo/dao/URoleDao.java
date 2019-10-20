@@ -3,16 +3,16 @@ package com.ddu.shiro_demo.dao;
 import com.ddu.shiro_demo.bean.URole;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Component
 public class URoleDao {
 
-    static List<URole> db;
+    static Set<URole> db;
 
     static {
-        db = new ArrayList<>();
+        db = new HashSet<>();
         /*
         u001 身份为 admin
         u002 身份为 guest
@@ -28,7 +28,7 @@ public class URoleDao {
      *
      * @return
      */
-    public List<URole> getURs() {
+    public Set<URole> getURs() {
         return db;
     }
 
