@@ -29,11 +29,13 @@ public class PermissionDao {
 - 用户：user01，user02，user03
 - 角色：admin，guest  
 - 权限：add，delete，update，select
-- 对应关系  
+- 对应关系 
+````
 |用户       |角色       |权限                         
 |user01     |admin     |add,delete,update,select  
 |user02     |guest     |add,select   
 |user03     |guest     |add,select  
+````
 
 还需要说明的是``controller``包下的接口，该包下有三个类：
 - `BookController`   
