@@ -1,22 +1,64 @@
 package com.ddu.shiro_demo.service.impl;
 
-import com.ddu.shiro_demo.bean.Permission;
-import com.ddu.shiro_demo.bean.Role;
-import com.ddu.shiro_demo.bean.User;
+import com.ddu.shiro_demo.bean.*;
+import com.ddu.shiro_demo.dao.*;
 import com.ddu.shiro_demo.service.LoginService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
+    UserDao userDao = new UserDao();
+    RoleDao roleDao = new RoleDao();
+    PermissionDao permissionDao = new PermissionDao();
+    URoleDao uRoleDao = new URoleDao();
+    RPermissionDao rPermissionDao = new RPermissionDao();
+
+
     @Override
     public User getUserByName(String getMapByName) {
-        return getMapByName(getMapByName);
+        Set<User> users = userDao.getUsers();
+        List<User> result = new ArrayList<>();
+        for (User user:
+             users) {
+            if(user.getName().equals(getMapByName)){
+                return userDao.getOne(user.getId());
+            }
+        }
+
+        return null;
+
+//        return getMapByName(getMapByName);
+    }
+
+    @Override
+    public List<Role> getRoleByUserId(String usrId) {
+        Set<URole> uRs = uRoleDao.getURs();
+        List<Role> result = new ArrayList<>();
+        for (URole ur:
+             uRs) {
+            if(ur.getUserId().equals(usrId)){
+                result.add(roleDao.getOne(ur.getRoleId()));
+            }
+        }
+        return result.isEmpty()?null:result;
+    }
+
+    //返回角色拥有的权限
+    @Override
+    public List<String> getPermissionByRoleId(String roleId) {
+        List<String> result = new ArrayList<>();
+        Set<RPermission> rPs = rPermissionDao.getRPs();
+        for (RPermission rp:
+                rPs) {
+            if(rp.getRoleId().equals(roleId))
+                result.add(permissionDao.getOne(rp.getPermissionId()).getName());
+        }
+
+
+        return result.isEmpty()?null:result;
     }
 
     /**

@@ -2,17 +2,22 @@ package com.ddu.shiro_demo.shiro;
 
 import com.ddu.shiro_demo.bean.Permission;
 import com.ddu.shiro_demo.bean.Role;
+import com.ddu.shiro_demo.bean.URole;
 import com.ddu.shiro_demo.bean.User;
+import com.ddu.shiro_demo.dao.RoleDao;
+import com.ddu.shiro_demo.dao.URoleDao;
 import com.ddu.shiro_demo.service.LoginService;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CustomRealm extends AuthorizingRealm {
 
@@ -27,22 +32,32 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-//        //获取登录用户名
-//        String name = (String) principalCollection.getPrimaryPrincipal();
-//        //根据用户名去数据库查询用户信息
-//        User user = loginService.getUserByName(name);
-//        //添加角色和权限
-//        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-//        for (Role role : user.getRoles()) {
-//            //添加角色
-//            simpleAuthorizationInfo.addRole(role.getName());
-//            //添加权限
-//            for (Permission permission : role.getPermissions()) {
-//                simpleAuthorizationInfo.addStringPermission(permission.getName());
-//            }
-//        }
-//        return simpleAuthorizationInfo;
-        return null;
+        //获取登录用户名
+        String name = (String) principalCollection.getPrimaryPrincipal();
+        //根据用户名去数据库查询用户信息
+        User user = loginService.getUserByName(name);
+
+        Set<String> roles = new HashSet<>();
+        Set<String> permissions = new HashSet<>();
+        List<Role> userRole = loginService.getRoleByUserId(user.getId());
+
+        for (Role r:
+                userRole) {
+            roles.add(r.getName());
+
+            for (String permission:
+                    loginService.getPermissionByRoleId(r.getId()))
+                         permissions.add(permission);
+
+        }
+
+
+        //添加角色和权限
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        simpleAuthorizationInfo.addRoles(roles);
+        simpleAuthorizationInfo.addStringPermissions(permissions);
+
+        return simpleAuthorizationInfo;
     }
 
     /**
@@ -55,12 +70,18 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         //加这一步的目的是在Post请求的时候会先进认证，然后在到请求
+        UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;
+
         if (authenticationToken.getPrincipal() == null) {
             return null;
         }
         //获取用户信息
         String name = authenticationToken.getPrincipal().toString();
+
+
+        //调用数据库获取用户信息,这里是模拟
         User user = loginService.getUserByName(name);
+
         if (user == null) {
             //这里返回后会报出对应异常
             return null;

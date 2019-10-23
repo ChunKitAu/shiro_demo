@@ -10,24 +10,27 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
 
     @RequestMapping("/login")
-    public CommonResult login(User user) {
+    public CommonResult login(@RequestParam("username") String username,
+                              @RequestParam("password") String password) {
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();
+
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
-                user.getName(),
-                user.getPassword()
+                username,
+                password
         );
         try {
             //进行验证，这里可以捕获异常，然后返回对应信息
             subject.login(usernamePasswordToken);
-            subject.checkRole("admin");
-            subject.checkPermissions("query", "add");
+//            subject.checkRole("admin");
+//            subject.checkPermissions("select", "add");
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return CommonResult.failure("账号或密码错误");
