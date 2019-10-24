@@ -84,12 +84,14 @@ public class CustomRealm extends AuthorizingRealm {
 
         if (user == null) {
             //这里返回后会报出对应异常
-            return null;
-        } else {
-            //这里验证authenticationToken和simpleAuthenticationInfo的信息
-            SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, user.getPassword().toString(), getName());
-            return simpleAuthenticationInfo;
+            throw new UnknownAccountException();
         }
+        //这里验证authenticationToken和simpleAuthenticationInfo的信息
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, user.getPassword().toString(), getName());
+        return simpleAuthenticationInfo;
+
     }
+
+
 
 }
