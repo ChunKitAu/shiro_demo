@@ -10,11 +10,14 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 public class LoginController {
@@ -24,6 +27,8 @@ public class LoginController {
                               @RequestParam("password") String password) {
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+
 
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
@@ -54,7 +59,7 @@ public class LoginController {
     public CommonResult logout() {
         Subject lvSubject=SecurityUtils.getSubject();
         lvSubject.logout();
-        return CommonResult.success().setCode(200).setMessage("退出成功");
+        return CommonResult.success().setMessage("退出成功");
     }
 
     @RequestMapping(value = "/login")
@@ -65,7 +70,7 @@ public class LoginController {
 
     //注解验角色和权限
 //    @RequiresRoles("admin")
-    @RequiresPermissions("add")
+//    @RequiresPermissions("add")
     @RequestMapping("/index")
     public String index() {
         return "index!";
