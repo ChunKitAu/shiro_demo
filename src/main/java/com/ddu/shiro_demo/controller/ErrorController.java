@@ -14,7 +14,7 @@ public class ErrorController {
 
     @GetMapping("/error")
     public CommonResult error(){
-        return CommonResult.failure().setCode(200);
+        return CommonResult.failure();
     }
 
 }

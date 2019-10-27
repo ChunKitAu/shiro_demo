@@ -10,8 +10,10 @@ import com.ddu.shiro_demo.service.LoginService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -76,18 +78,25 @@ public class CustomRealm extends AuthorizingRealm {
             return null;
         }
         //获取用户信息
-        String name = authenticationToken.getPrincipal().toString();
+        String username = authenticationToken.getPrincipal().toString();
 
 
         //调用数据库获取用户信息,这里是模拟
-        User user = loginService.getUserByName(name);
+        User user = loginService.getUserByName(username);
 
         if (user == null) {
             //这里返回后会报出对应异常
             throw new UnknownAccountException();
         }
         //这里验证authenticationToken和simpleAuthenticationInfo的信息
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name, user.getPassword().toString(), getName());
+        //盐值加密后的密码
+        String password = new SimpleHash("MD5", user.getPassword(), ByteSource.Util.bytes(username), 1024).toString();
+
+        //盐值.
+        ByteSource salt = ByteSource.Util.bytes(username);
+
+        SimpleAuthenticationInfo simpleAuthenticationInfo= new SimpleAuthenticationInfo(username, password, salt, getName());
+
         return simpleAuthenticationInfo;
 
     }
